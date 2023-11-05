@@ -1,0 +1,15 @@
+{% extends 'cooking/base_template.html' %}
+
+{% block content %}
+  <h1>Edit Appliance</h1>  {# Updated title to match the view's purpose #}
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Update Appliance</button>
+  </form>
+
+  <a href="{% url 'appliance-list' %}" class="btn btn-secondary">Cancel</a>
+</div>
+{% endblock %}

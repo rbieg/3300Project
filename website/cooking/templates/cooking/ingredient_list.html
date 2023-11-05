@@ -1,0 +1,19 @@
+{% extends 'cooking/base_template.html' %}
+
+{% block content %}
+<h1>Ingredient List</h1>
+
+<a href="{% url 'create_ingredient' %}" class="btn btn-primary">Add Ingredient</a>
+
+{% if ingredient_list %}
+<ul>
+{% for ingredient in ingredient_list %}
+  <li>
+    <a href="{{ ingredient.get_absolute_url }}">{{ ingredient.name }}</a>
+  </li>
+{% endfor %}
+</ul>
+{% else %}
+<p>There are no ingredients registered.</p>
+{% endif %}
+{% endblock %}

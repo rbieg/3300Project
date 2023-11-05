@@ -1,0 +1,19 @@
+{% extends 'cooking/base_template.html' %}
+
+{% block content %}
+<h1>Appliance List</h1>
+
+<a href="{% url 'create_appliance' %}" class="btn btn-primary">Add Appliance</a>
+
+{% if appliance_list %}
+<ul>
+{% for appliance in appliance_list %}
+  <li>
+    <a href="{{ appliance.get_absolute_url }}">{{ appliance.name }}</a>
+  </li>
+{% endfor %}
+</ul>
+{% else %}
+<p>There are no appliances registered.</p>
+{% endif %}
+{% endblock %}
