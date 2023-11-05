@@ -1,0 +1,14 @@
+{% extends 'cooking/base_template.html' %}
+
+{% block content %}
+  <h1> Name: {{ appliance.name }}</h1>
+
+  <p><strong>Name:</strong> {{ appliance.name }}</p>
+  <p><strong>Description:</strong> {{ appliance.description }}</p>
+  <p><strong>Heat Setting:</strong> {{ appliance.heat_setting }}</p>
+
+
+  <a class="btn btn-primary" href="{{ appliance.get_absolute_url }}" role="button">View</a>
+  <a href="{% url 'delete_appliance' appliance.id %}" class="btn btn-danger">Delete</a>
+  <a href="{% url 'update_appliance' appliance.id %}" class="btn btn-primary">Update</a>
+{% endblock %}

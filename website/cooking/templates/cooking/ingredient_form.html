@@ -1,0 +1,14 @@
+{% extends 'cooking/base_template.html' %}
+
+{% block content %}
+  <h1>Update Ingredient</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Update Ingredient</button>
+  </form>
+  <a href="{% url 'ingredient-list' %}" class="btn btn-secondary">Cancel</a>
+</div>
+{% endblock %}
