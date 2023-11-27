@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import *
 from django.views import generic
-from .forms import IngredientForm, ApplianceForm, CreateUserForm, LoggedUserForm, RememberMeAuthenticationForm
+from .forms import IngredientForm, ApplianceForm, CreateUserForm, LoggedUserForm
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from .decorators import unauthenticatedUser, allowedUsers
@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib.auth.views import LoginView
+from django.contrib.auth import authenticate, login
 
 @login_required(login_url='login')
 @allowedUsers(allowedRoles=['user_role'])
@@ -20,7 +21,12 @@ def create_appliance(request):
             appliance = form.save()
             return redirect('appliance-detail', pk=appliance.id)
     else:
-        form = ApplianceForm()
+        # Retrieve form data from cookies
+        form = ApplianceForm(initial={
+            'name': request.COOKIES.get('name', ''),
+            'description': request.COOKIES.get('description', ''),
+            'heat_setting': request.COOKIES.get('heat_setting', ''),
+        })
     return render(request, 'cooking/appliance_form.html', {'form': form})
 
 @login_required(login_url='login')
@@ -113,18 +119,21 @@ def registerPage(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('user')
-            group = Group.objects.get(name='user')
+            group = Group.objects.get(name='user_role')
             user.groups.add(group)
             loggedUser = LoggedUser.objects.create(user=user,)
             loggedUser.save()
 
-            messages.success(request, 'Account was created for' + username)
-            return redirect('login')
+            if username is not None: 
+                messages.success(request, 'Account was created for ' + username)
+            else:
+                messages.success(request, 'Account was created successfully')
+            return redirect('index')
     context = {'form':form}
     return render(request, 'registration/register.html', context)
 
 @login_required(login_url='login')
-@allowedUsers(allowedRoles=['logged_in'])
+@allowedUsers(allowedRoles=['user_role'])
 def userPage(request):
     loggedUser = request.user.student
     form = LoggedUserForm(instance = loggedUser)
@@ -136,14 +145,11 @@ def userPage(request):
         context = {'form':form}
         return render(request, 'cooking/user.html', context)
 
-class RememberMeLoginView(LoginView):
-    form_class = RememberMeAuthenticationForm
+def set_cookie(request):
+    response = HttpResponse("Cookie set successfully")
+    response.set_cookie('my_cookie', 'cookie_value', max_age=3600, secure=True, httponly=True)
+    return response
 
-    def form_valid(self, form):
-        remember_me = form.cleaned_data.get('remember_me')
-        if not remember_me:
-            self.request.session.set_expiry(0)  # Session will expire when the user closes the browser
-        return super().form_valid(form)
-
-
-    
+def get_cookie(request):
+    cookie_value = request.COOKIES.get('my_cookie', 'default_value')
+    return HttpResponse(f"Cookie value: {cookie_value}")

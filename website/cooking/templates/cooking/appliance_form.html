@@ -1,15 +1,23 @@
 {% extends 'cooking/base_template.html' %}
 
 {% block content %}
-  <h1>Edit Appliance</h1>  {# Updated title to match the view's purpose #}
+  <h1>Create Appliance</h1>
 
-  <form method="post">
+  <form method="post" id="appliance-form">
     {% csrf_token %}
     {{ form.as_p }}
 
-    <button type="submit" class="btn btn-primary">Update Appliance</button>
+    <button type="submit" class="btn btn-primary">Create Appliance</button>
   </form>
 
   <a href="{% url 'appliance-list' %}" class="btn btn-secondary">Cancel</a>
-</div>
+
+  <script>
+    // Save form data to cookies in real-time
+    document.getElementById('appliance-form').addEventListener('input', function() {
+      document.cookie = 'name=' + encodeURIComponent(document.getElementById('id_name').value);
+      document.cookie = 'description=' + encodeURIComponent(document.getElementById('id_description').value);
+      document.cookie = 'heat_setting=' + encodeURIComponent(document.getElementById('id_heat_setting').value);
+    });
+  </script>
 {% endblock %}

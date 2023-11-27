@@ -4,8 +4,8 @@ from .models import Appliance
 from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import keys
+from selenium.webdriver.support.ui import Select
 
-chromedriver_path = 'C:\\Users\\saber\\git\\3300Project\\website\\cooking\\chromedriver.exe'
 
 class ApplianceModelTest(TestCase):
     def setUp(self):
@@ -31,5 +31,23 @@ class LoginFormTest(LiveServerTestCase):
 
         assert 'rbieg' in driver.page_source
 
+class ApplianceFormTest(LiveServerTestCase):
+    def testform(self):
+        driver = webdriver.Chrome()
+        driver.get("http://127.0.0.1:8000/appliance/create_appliance/")
+
+        name = driver.find_element_by_name('name')
+        description = driver.find_element_by_name('description')
+        heat_setting = driver.find_element_by_name('heat_setting')
+        submit = driver.find_element_by_id('submit')
+
+        name.send_keys('Test Appliance')
+        description.send_keys("Test Description")
+        heat_setting.select_by_index(1)
+
+
+        submit.send_keys(keys.RETURN)
+
+        assert "low" in driver.page_source
 
 

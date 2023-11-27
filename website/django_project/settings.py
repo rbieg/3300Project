@@ -136,3 +136,9 @@ os.path.join(BASE_DIR, 'static')
 
 
 MEDIA_URL = '/images/'
+
+SESSION_COOKIE_AGE = 15
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+CSRF_COOKIE_NAME = "cooking_csrftoken"
+SESSION_COOKIE_NAME = "cooking_sessionid"
