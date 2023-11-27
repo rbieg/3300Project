@@ -1,4 +1,5 @@
-from django.urls import path
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
@@ -13,4 +14,8 @@ urlpatterns = [
     path('ingredient/create_ingredient/', views.create_ingredient, name='create_ingredient'),
     path('ingredient/<int:ingredient_id>/delete_ingredient/', views.delete_ingredient, name='delete_ingredient'),
     path('ingredient/<int:ingredient_id>/update_ingredient/', views.update_ingredient, name='update_ingredient'),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/register/', views.registerPage, name = 'registerPage'),
+    path('user/', views.userPage, name = 'userPage'),
+    path('accounts/register/', views.registerPage, name = 'registerPage')
 ]
